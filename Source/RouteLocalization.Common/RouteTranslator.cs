@@ -160,7 +160,7 @@ namespace RouteLocalization.Mvc
 			{
 				throw new InvalidOperationException(string.Format("AcceptedCultures does not contain culture '{0}'.", culture));
 			}
-
+            
 			route.AddTranslation(TransformUrl(url, culture, route), culture);
 
 			if (Configuration.AttributeRouteProcessing == AttributeRouteProcessing.AddAsNeutralRouteAndReplaceByFirstTranslation)
@@ -215,7 +215,13 @@ namespace RouteLocalization.Mvc
 
 		public RouteTranslator ForNamedRoute(string namedRoute)
 		{
-			NamedRoute = namedRoute;
+            var route = GetNamedRoute(namedRoute);
+            //set the name on datatokens so it can be accessed 
+            if (!route.DataTokens.ContainsKey("route-name") && namedRoute != null)
+            {
+                route.DataTokens.Add("route-name", namedRoute);
+            }
+            NamedRoute = namedRoute;
 
 			return this;
 		}
